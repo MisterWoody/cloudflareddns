@@ -41,7 +41,7 @@ pub async fn create_or_update_record(
         "https://api.cloudflare.com/client/v4/zones/{}/dns_records?name={}&type={}",
         zone_id, record_name, record_type
     );
-    println!("Url for POST request: {}", url);
+    println!("Url for GET request: {}", url);
 
     let res = client
         .get(&url)
