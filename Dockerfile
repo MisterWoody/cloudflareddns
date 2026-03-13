@@ -41,4 +41,4 @@ COPY --from=build /bin/server /bin/
 
 CMD ["/bin/server"]
 
-# CMD ["cargo", "run", "--release", "--bin", "vod-api"] \
+# CMD ["cargo", "run", "--release", "--bin", "cloudflareddns"] \
