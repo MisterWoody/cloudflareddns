@@ -1,0 +1,12 @@
+[package]
+name = "cloudflareddns"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+dotenv = "^0.15"
+failure = "0.1.8"
+maybe-async = "0.2.10"
+tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros", "signal"] }
+reqwest = { version = "0.13.2", features = [ "json"] }
+serde_json = "1.0.149"
