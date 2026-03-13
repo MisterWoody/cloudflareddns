@@ -8,7 +8,7 @@ To use this program, you will need a CloudFlare API Token with Update DNS record
 
 Once you have an API token, you can set the environment variables to configure the program.
 
-It will your external IP address(es), get the ID of the specified DNS zones, and create or update a DNS record in those zones.
+It will resolve your external IP address(es), get the ID of the specified DNS zones, and create or update a DNS record in those zones.
 ## Environment
 
     CLOUDFLAREDDNS_APITOKEN: The API Token under your CloudFlare account. Used to authenticate with the CloudFlare API.
