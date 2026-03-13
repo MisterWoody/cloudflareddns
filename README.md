@@ -11,7 +11,7 @@ Once you have an API token, you can set the environment variables to configure t
 It will your external IP address(es), get the ID of the specified DNS zones, and create or update a DNS record in those zones.
 ## Environment
 
-    CLOUDFLAREDDNS_APITOKEN: The username/API key for your CloudFlare account. These are used to authenticate with the CloudFlare API.
+    CLOUDFLAREDDNS_APITOKEN: The API Token under your CloudFlare account. Used to authenticate with the CloudFlare API.
     CLOUDFLAREDDNS_RECORDTYPES: A semicolon-separated list of record types to create/update. This can include A, AAAA, or both.
     CLOUDFLAREDDNS_HOSTS: A semicolon-separated list of hostnames to update. This should be the name of the DNS record that you want to create/update in each zone.
     CLOUDFLAREDDNS_ZONES: A semicolon-separated list of zone names to update. This should be the name of the DNS zone that contains the record that you want to update.
