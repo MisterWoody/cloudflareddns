@@ -49,14 +49,14 @@ impl Config {
         repeat_interval
     }
 
-    pub fn hosts() -> String {
+    pub fn hosts(&mut self) -> String {
         let hosts = std::env::var("CLOUDFLAREDDNS_HOSTS")
             .expect("CLOUDFLAREDDNS_HOSTS environment variable not set");
         // dbg!(&hosts);
         hosts
     }
 
-    pub fn zones() -> String {
+    pub fn zones(&mut self) -> String {
         let zones = std::env::var("CLOUDFLAREDDNS_ZONES")
             .expect("CLOUDFLAREDDNS_ZONES environment variable not set");
         // dbg!(&zones);
