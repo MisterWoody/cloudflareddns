@@ -15,16 +15,16 @@ pub async fn run() -> Result<(), Box<dyn Error>> {
     let mut conf = Config::new();
 
     let api_token = conf.api_token();
-    let record_types = (conf).record_types();
-    let repeat_interval = (conf).repeat_interval();
+    let record_types = conf.record_types();
+    let repeat_interval = conf.repeat_interval();
 
     let record_type_values = record_types.split(';').collect::<Vec<_>>();
     let ipv4 = record_type_values.contains(&"A");
     let ipv6 = record_type_values.contains(&"AAAA");
 
     // host and zones are parallel arrays with elements at the same index expected to go together
-    let hosts = (conf).hosts();
-    let zones = (conf).zones();
+    let hosts = conf.hosts();
+    let zones = conf.zones();
     // Split the hosts and zones strings on the semicolon character into vectors.
     let hosts_vec = hosts.split(';').collect::<Vec<_>>();
     let zones_vec = zones.split(';').collect::<Vec<_>>();
