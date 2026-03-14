@@ -8,19 +8,23 @@ use std::time::Duration;
 use tokio::time::sleep;
 use tokio::{signal};
 use monitor::check_ips_and_update_dns;
+use crate::config::Config;
 
 pub async fn run() -> Result<(), Box<dyn Error>> {
 
-    let api_token = config::api_token();
-    let repeat_interval = config::repeat_interval();
-    let record_types = config::record_types();
+    let mut conf = Config::new();
+
+    let api_token = Config::api_token(&mut conf);
+    let record_types = Config::record_types(&mut conf);
+    let repeat_interval = Config::repeat_interval(&mut conf);
+
     let record_type_values = record_types.split(';').collect::<Vec<_>>();
     let ipv4 = record_type_values.contains(&"A");
     let ipv6 = record_type_values.contains(&"AAAA");
 
     // host and zones are parallel arrays with elements at the same index expected to go together
-    let hosts = config::hosts();
-    let zones = config::zones();
+    let hosts = Config::hosts();
+    let zones = Config::zones();
     // Split the hosts and zones strings on the semicolon character into vectors.
     let hosts_vec = hosts.split(';').collect::<Vec<_>>();
     let zones_vec = zones.split(';').collect::<Vec<_>>();
