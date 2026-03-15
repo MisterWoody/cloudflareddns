@@ -47,22 +47,30 @@ pub async fn run() -> Result<(), Box<dyn Error>> {
         }
     }
     else {
+        let mut end:bool = false;
         loop {
             match check_ips_and_update_dns(&api_token, &hosts_vec, &zones_vec, ipv4, ipv6).await {
                 Ok(()) => {},
                 Err(e) => eprintln!("{}", e)
             }
             println!("DNS updated. Sleeping for {repeat_interval} seconds.");
-            sleep(Duration::from_secs(repeat_interval)).await;
+            // See rust in a month of lunches select! in section 19.33.4
+            tokio::select! {
+                _ = sleep(Duration::from_secs(repeat_interval)) => {},
+                _ = shutdown_signal() => {
+                    end = true;
+                }
+            }
+            if end {
+                break;
+            }
         }
     }
-
-    // shutdown_signal().await;
 
     Ok(())
 }
 
-// todo add graceful shutdown to fix issue with ctrl-c
+// Graceful shutdown with ctrl-c
 async fn shutdown_signal() {
     let ctrl_c = async {
         signal::ctrl_c()
