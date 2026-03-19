@@ -19,11 +19,11 @@ pub async fn get_external_ip(api_endpoint: &str) -> Result<std::string::String, 
         } else {
             // If parsing failed, return an error
             eprintln!("Error: {} is not a valid IP address.", &body);
-            let invalid_ip: Box<dyn Error> = String::from(format!("IP address {} is invalid", body)).into();
+            let invalid_ip: Box<dyn Error> = format!("IP address {} is invalid", body).into();
             Err(invalid_ip)
         }
     } else {
-        let endpoint_fail: Box<dyn Error> =  String::from(format!("Retrieving the IP address API endpoint failed: {}", res.error_for_status().unwrap_err())).into();
+        let endpoint_fail: Box<dyn Error> =  format!("Retrieving the IP address API endpoint failed: {}", res.error_for_status().unwrap_err()).into();
         Err(endpoint_fail)
     }
 }
