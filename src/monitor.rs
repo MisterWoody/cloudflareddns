@@ -20,7 +20,7 @@ pub async fn check_ips_and_update_dns(
     let external_ipv6 = if ipv6 {
         get_external_ipv6().await?
     } else {
-        "IPv6 is unused".into()
+        String::from("IPv6 is unused")
     //     let unused_ipv6: Box<dyn Error> = String::from("IPv6 is unused").into();
     //     return Err(unused_ipv6);
     };
