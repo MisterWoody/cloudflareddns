@@ -1,5 +1,6 @@
 # NOTE - make sure to set the line ending to LF and NOT CRLF due to the injected shell script, otherwise the build fails at the "set -e" stage
 # In fedora using podman to build an image requires the addition of the z parameter to set correct shared permissions
+# There also appears to be an issue with dotenv package, run as **sudo ** (possible permission issue)
 ARG RUST_VERSION=1.94.0
 ARG APP_NAME=cloudflareddns
 FROM rust:${RUST_VERSION}-slim AS build
@@ -7,11 +8,11 @@ ARG APP_NAME
 
 WORKDIR /app
 
-RUN --mount=type=bind,source=Cargo.toml,target=Cargo.toml \
-    --mount=type=bind,source=Cargo.lock,target=Cargo.lock \
-    --mount=type=bind,source=src,target=src \
-    --mount=type=cache,target=/app/target/ \
-    --mount=type=cache,target=/usr/local/cargo/registry/ \
+RUN --mount=type=bind,source=Cargo.toml,target=Cargo.toml,z \
+    --mount=type=bind,source=Cargo.lock,target=Cargo.lock,z \
+    --mount=type=bind,source=src,target=src,z \
+    --mount=type=cache,target=/app/target/,z \
+    --mount=type=cache,target=/usr/local/cargo/registry/,z \
     <<EOF
 set -e
 cargo build --release
