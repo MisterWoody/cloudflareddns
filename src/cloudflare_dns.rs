@@ -44,15 +44,16 @@ pub async fn create_or_update_record(
         let records = json["result"].as_array().unwrap();
         if !records.is_empty() && records[0]["content"] == ip {
             let the_time = chrono::Local::now();
-            println!("{} The record is already correct. No need to do anything here!\n{}", the_time.format("%Y-%m-%d %H:%M:%S").to_string(), records[0]);
+            println!("{} The record is already correct.\n{}", the_time.format("%Y-%m-%d %H:%M:%S"), records[0]);
             Ok(())
         } else if records.is_empty() {
             let res = create_dns_record(api_token, ip, zone_id, record_name, record_type).await?;
+            let the_time = chrono::Local::now();
             if res.status().is_success() {
-                println!("Created a new record\n{}", res.text().await?);
+                println!("{} Created a new record\n{}", the_time.format("%Y-%m-%d %H:%M:%S"), res.text().await?);
                 Ok(())
             } else {
-                println!("Failed to create record.");
+                println!("{} Failed to create record.", the_time.format("%Y-%m-%d %H:%M:%S"));
                 Err(res.error_for_status().unwrap_err())
             }
         } else {
@@ -63,7 +64,8 @@ pub async fn create_or_update_record(
                 Ok(())
             }
             else {
-                println!("Failed to update record.");
+                let the_time = chrono::Local::now();
+                println!("{} Failed to update record.", the_time.format("%Y-%m-%d %H:%M:%S"));
                 Err(res.error_for_status().unwrap_err())
             }
         }
@@ -81,7 +83,7 @@ async fn dns_records(api_token: &str, zone_id: &str, record_name: &str, record_t
         zone_id, record_name, record_type
     );
     let the_time = chrono::Local::now();
-    println!("{} Url for GET request: {}", the_time.format("%Y-%m-%d %H:%M:%S").to_string(), url);
+    println!("{} Url for GET request: {}", the_time.format("%Y-%m-%d %H:%M:%S"), url);
 
     let res = client
         .get(&url)
@@ -104,7 +106,7 @@ async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
         "https://api.cloudflare.com/client/v4/zones/{}/dns_records",
         zone_id
         );
-    let body = serde_json::json!({
+    let body = json!({
         "type": record_type,
         "name": record_name,
         "content": ip,
@@ -112,7 +114,7 @@ async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
         "proxied": true
     });
     let the_time = chrono::Local::now();
-    println!("{} POST URL: {}\nPOST body: {}", the_time.format("%Y-%m-%d %H:%M:%S").to_string(), post_url, body);
+    println!("{} POST URL: {}\nPOST body: {}", the_time.format("%Y-%m-%d %H:%M:%S"), post_url, body);
 
     let res = client
         .post(&post_url)
@@ -146,7 +148,7 @@ async fn update_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
                 "proxied": true
             });
     let the_time = chrono::Local::now();
-    println!("{} PATCH URL: {}\nPATCH body: {}", the_time.format("%Y-%m-%d %H:%M:%S").to_string(), patch_url, body);
+    println!("{} PATCH URL: {}\nPATCH body: {}", the_time.format("%Y-%m-%d %H:%M:%S"), patch_url, body);
 
     let res = client
         .patch(&patch_url)
