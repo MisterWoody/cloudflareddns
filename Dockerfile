@@ -2,7 +2,7 @@
 # In fedora using podman to build an image requires the addition of the z parameter to set correct shared permissions
 # see Dockerfile.fedora
 # There also appears to be an issue with dotenv package, run as **sudo ** (possible permission issue)
-ARG RUST_VERSION=1.94.0
+ARG RUST_VERSION=1.94.1
 ARG APP_NAME=cloudflareddns
 FROM rust:${RUST_VERSION}-slim AS build
 ARG APP_NAME

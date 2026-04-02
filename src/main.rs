@@ -1,3 +1,4 @@
+//! A simple rust application to leverage Cloudflare as a dynamic DNS provider
 use std::{process};
 use std::error::Error;
 use cloudflareddns::run;

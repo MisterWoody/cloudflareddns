@@ -1,8 +1,8 @@
-mod cloudflare_dns;
-mod config;
-mod external_ip;
-mod monitor;
-mod shutdown;
+pub mod cloudflare_dns;
+pub mod config;
+pub mod external_ip;
+pub mod monitor;
+pub mod shutdown;
 
 use std::error::Error;
 use std::time::Duration;

@@ -1,8 +1,9 @@
 use std::env;
 
-// TODO only invoke the dotenv call once to merge file variables into the environment
+// Only invoke the dotenv call once to merge file variables into the environment. The config struct wraps a boolean
+// indicating if this merge has occurred
 
-pub struct Config {
+pub(crate) struct Config {
     merged: bool,
 }
 
@@ -11,7 +12,7 @@ impl Config {
         Config { merged: false }
     }
 
-    pub fn api_token(&mut self) -> String {
+    pub(crate) fn api_token(&mut self) -> String {
         let api_token = env::var("CLOUDFLAREDDNS_APITOKEN").unwrap_or_else(|_| {
             dotenv::dotenv().expect("Unable to load environment variable from .env file");
             self.merged = true;
@@ -21,9 +22,8 @@ impl Config {
         api_token
     }
 
-    pub fn record_types(&mut self) -> String {
+    pub(crate) fn record_types(&mut self) -> String {
         let record_types = env::var("CLOUDFLAREDDNS_RECORDTYPES").unwrap_or_else(|_| {
-
             if !self.merged {
                 dotenv::dotenv().expect("Unable to load environment variable from .env file");
                 self.merged = true;
@@ -35,7 +35,7 @@ impl Config {
     }
 
     // Get repeat interval, defaults to 0 if not specified, which runs only once.
-    pub fn repeat_interval(&mut self) -> u64 {
+    pub(crate) fn repeat_interval(&mut self) -> u64 {
         let repeat_interval = env::var("CLOUDFLAREDDNS_REPEAT_INTERVAL").unwrap_or_else(|_| {
             if !self.merged {
                 dotenv::dotenv().expect("Unable to load environment variable from .env file");
@@ -49,14 +49,14 @@ impl Config {
         repeat_interval
     }
 
-    pub fn hosts(&mut self) -> String {
+    pub(crate) fn hosts(&mut self) -> String {
         let hosts = std::env::var("CLOUDFLAREDDNS_HOSTS")
             .expect("CLOUDFLAREDDNS_HOSTS environment variable not set");
         // dbg!(&hosts);
         hosts
     }
 
-    pub fn zones(&mut self) -> String {
+    pub(crate) fn zones(&mut self) -> String {
         let zones = std::env::var("CLOUDFLAREDDNS_ZONES")
             .expect("CLOUDFLAREDDNS_ZONES environment variable not set");
         // dbg!(&zones);
