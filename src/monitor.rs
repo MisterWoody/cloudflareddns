@@ -1,6 +1,7 @@
 use std::error::Error;
 use crate::cloudflare_dns::{create_or_update_record, get_zone_id};
 use crate::external_ip::{get_external_ipv4, get_external_ipv6};
+use chrono::Local;
 
 pub async fn check_ips_and_update_dns(
     api_token: &str,
@@ -15,7 +16,7 @@ pub async fn check_ips_and_update_dns(
         let unused_ipv4: Box<dyn Error> = String::from("IPv4 is unused").into();
         return Err(unused_ipv4);
     };
-    let the_time = chrono::Local::now();
+    let the_time = Local::now();
     println!("{} External IPv4 address: {}", the_time.format("%Y-%m-%d %H:%M:%S"), external_ipv4);
 
     let external_ipv6 = if ipv6 {
@@ -25,7 +26,7 @@ pub async fn check_ips_and_update_dns(
     //     let unused_ipv6: Box<dyn Error> = String::from("IPv6 is unused").into();
     //     return Err(unused_ipv6);
     };
-    let the_time = chrono::Local::now();
+    let the_time = Local::now();
     println!("{} External IPv6 address: {}", the_time.format("%Y-%m-%d %H:%M:%S"), external_ipv6);
 
     // Iterate over an enumerated value of a tuple of the matching host and zone
@@ -38,10 +39,14 @@ pub async fn check_ips_and_update_dns(
         //
         if ipv4 {
             match create_or_update_record(api_token, &external_ipv4, &record_name, "A", &zone_id).await {
-                Ok(_) => println!(
-                    "Successfully updated A record for {}, zone {} in CloudFlare to {}",
+                Ok(_) => {
+                    let the_time = Local::now();
+                    println!(
+                    "{} Successfully updated A record for {}, zone {} in CloudFlare to {}",
+                    the_time.format("%Y-%m-%d %H:%M:%S"),
                     host, zone, external_ipv4
-                ),
+                    )
+                },
                 Err(e) => println!("Failed to create or update record: {}", e),
             }
         }

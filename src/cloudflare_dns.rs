@@ -1,6 +1,7 @@
 //! Cloudflare DNS API specific related functions
 use reqwest::Response;
 use serde_json::json;
+use chrono::Local;
 
 pub async fn get_zone_id(api_token: &str, zone_name: &str) -> Result<String, reqwest::Error> {
     let client = reqwest::Client::new();
@@ -43,12 +44,12 @@ pub async fn create_or_update_record(
         let json = res.json::<serde_json::Value>().await?;
         let records = json["result"].as_array().unwrap();
         if !records.is_empty() && records[0]["content"] == ip {
-            let the_time = chrono::Local::now();
+            let the_time = Local::now();
             println!("{} The record is already correct.\n{}", the_time.format("%Y-%m-%d %H:%M:%S"), records[0]);
             Ok(())
         } else if records.is_empty() {
             let res = create_dns_record(api_token, ip, zone_id, record_name, record_type).await?;
-            let the_time = chrono::Local::now();
+            let the_time = Local::now();
             if res.status().is_success() {
                 println!("{} Created a new record\n{}", the_time.format("%Y-%m-%d %H:%M:%S"), res.text().await?);
                 Ok(())
@@ -64,7 +65,7 @@ pub async fn create_or_update_record(
                 Ok(())
             }
             else {
-                let the_time = chrono::Local::now();
+                let the_time = Local::now();
                 println!("{} Failed to update record.", the_time.format("%Y-%m-%d %H:%M:%S"));
                 Err(res.error_for_status().unwrap_err())
             }
@@ -82,7 +83,7 @@ async fn dns_records(api_token: &str, zone_id: &str, record_name: &str, record_t
         "https://api.cloudflare.com/client/v4/zones/{}/dns_records?name={}&type={}",
         zone_id, record_name, record_type
     );
-    let the_time = chrono::Local::now();
+    let the_time = Local::now();
     println!("{} Url for GET request: {}", the_time.format("%Y-%m-%d %H:%M:%S"), url);
 
     let res = client
@@ -113,7 +114,7 @@ async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
         "ttl": 1,
         "proxied": true
     });
-    let the_time = chrono::Local::now();
+    let the_time = Local::now();
     println!("{} POST URL: {}\nPOST body: {}", the_time.format("%Y-%m-%d %H:%M:%S"), post_url, body);
 
     let res = client
@@ -147,7 +148,7 @@ async fn update_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
                 "ttl": 1,
                 "proxied": true
             });
-    let the_time = chrono::Local::now();
+    let the_time = Local::now();
     println!("{} PATCH URL: {}\nPATCH body: {}", the_time.format("%Y-%m-%d %H:%M:%S"), patch_url, body);
 
     let res = client
