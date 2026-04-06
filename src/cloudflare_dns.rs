@@ -51,10 +51,10 @@ pub async fn create_or_update_record(
             let res = create_dns_record(api_token, ip, zone_id, record_name, record_type).await?;
             let the_time = Local::now();
             if res.status().is_success() {
-                println!("{} Created a new record\n{}", the_time.format("%Y-%m-%d %H:%M:%S"), res.text().await?);
+                println!("{} Created a new record\n{}", the_time.format("%Y-%m-%d %H:%M:%S%z"), res.text().await?);
                 Ok(())
             } else {
-                println!("{} Failed to create record.", the_time.format("%Y-%m-%d %H:%M:%S"));
+                println!("{} Failed to create record.", the_time.format("%Y-%m-%d %H:%M:%S%z"));
                 Err(res.error_for_status().unwrap_err())
             }
         } else {

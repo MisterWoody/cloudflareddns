@@ -33,7 +33,7 @@ pub async fn check_ips_and_update_dns(
     for (host, zone) in hosts_vec.iter().zip(zones_vec.iter()) {
         // Call the get_zone_id function to get the zone ID for the current host.
         let zone_id = get_zone_id(api_token, zone).await?;
-        println!("{} Zone ID for zone {}: {}", the_time.format("%Y-%m-%d %H:%M:%S"), zone, zone_id);
+        println!("{} Zone ID for zone {}: {}", the_time.format("%Y-%m-%d %H:%M:%S%z"), zone, zone_id);
         // Need host and zone to query DNS
         let record_name = format!("{}.{}", host, zone);
         //
