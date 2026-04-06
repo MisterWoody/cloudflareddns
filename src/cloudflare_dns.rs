@@ -45,7 +45,7 @@ pub async fn create_or_update_record(
         let records = json["result"].as_array().unwrap();
         if !records.is_empty() && records[0]["content"] == ip {
             let the_time = Local::now();
-            println!("{} The record is already correct.\n{}", the_time.format("%Y-%m-%d %H:%M:%S"), records[0]);
+            println!("{} The record is already correct.\n{}", the_time.format("%Y-%m-%d %H:%M:%S%z"), records[0]);
             Ok(())
         } else if records.is_empty() {
             let res = create_dns_record(api_token, ip, zone_id, record_name, record_type).await?;
@@ -66,7 +66,7 @@ pub async fn create_or_update_record(
             }
             else {
                 let the_time = Local::now();
-                println!("{} Failed to update record.", the_time.format("%Y-%m-%d %H:%M:%S"));
+                println!("{} Failed to update record.", the_time.format("%Y-%m-%d %H:%M:%S%z"));
                 Err(res.error_for_status().unwrap_err())
             }
         }
@@ -84,7 +84,7 @@ async fn dns_records(api_token: &str, zone_id: &str, record_name: &str, record_t
         zone_id, record_name, record_type
     );
     let the_time = Local::now();
-    println!("{} Url for GET request: {}", the_time.format("%Y-%m-%d %H:%M:%S"), url);
+    println!("{} Url for GET request: {}", the_time.format("%Y-%m-%d %H:%M:%S%z"), url);
 
     let res = client
         .get(&url)
@@ -115,7 +115,7 @@ async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
         "proxied": true
     });
     let the_time = Local::now();
-    println!("{} POST URL: {}\nPOST body: {}", the_time.format("%Y-%m-%d %H:%M:%S"), post_url, body);
+    println!("{} POST URL: {}\nPOST body: {}", the_time.format("%Y-%m-%d %H:%M:%S%z"), post_url, body);
 
     let res = client
         .post(&post_url)
@@ -149,7 +149,7 @@ async fn update_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
                 "proxied": true
             });
     let the_time = Local::now();
-    println!("{} PATCH URL: {}\nPATCH body: {}", the_time.format("%Y-%m-%d %H:%M:%S"), patch_url, body);
+    println!("{} PATCH URL: {}\nPATCH body: {}", the_time.format("%Y-%m-%d %H:%M:%S%z"), patch_url, body);
 
     let res = client
         .patch(&patch_url)

@@ -17,7 +17,7 @@ pub async fn check_ips_and_update_dns(
         return Err(unused_ipv4);
     };
     let the_time = Local::now();
-    println!("{} External IPv4 address: {}", the_time.format("%Y-%m-%d %H:%M:%S"), external_ipv4);
+    println!("{} External IPv4 address: {}", the_time.format("%Y-%m-%d %H:%M:%S%z"), external_ipv4);
 
     let external_ipv6 = if ipv6 {
         get_external_ipv6().await?
@@ -27,7 +27,7 @@ pub async fn check_ips_and_update_dns(
     //     return Err(unused_ipv6);
     };
     let the_time = Local::now();
-    println!("{} External IPv6 address: {}", the_time.format("%Y-%m-%d %H:%M:%S"), external_ipv6);
+    println!("{} External IPv6 address: {}", the_time.format("%Y-%m-%d %H:%M:%S%z"), external_ipv6);
 
     // Iterate over an enumerated value of a tuple of the matching host and zone
     for (host, zone) in hosts_vec.iter().zip(zones_vec.iter()) {
@@ -43,7 +43,7 @@ pub async fn check_ips_and_update_dns(
                     let the_time = Local::now();
                     println!(
                     "{} Successfully updated A record for {}, zone {} in CloudFlare to {}",
-                    the_time.format("%Y-%m-%d %H:%M:%S"),
+                    the_time.format("%Y-%m-%d %H:%M:%S%z"),
                     host, zone, external_ipv4
                     )
                 },
