@@ -3,6 +3,7 @@ pub mod config;
 pub mod external_ip;
 pub mod monitor;
 pub mod shutdown;
+pub mod log_util;
 
 use std::error::Error;
 use std::time::Duration;
