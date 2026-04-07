@@ -11,6 +11,7 @@ use tokio::time::sleep;
 use monitor::check_ips_and_update_dns;
 use config::Config;
 use shutdown::shutdown_signal;
+use crate::log_util::log_prefix;
 
 pub async fn run() -> Result<(), Box<dyn Error>> {
 
@@ -55,7 +56,7 @@ pub async fn run() -> Result<(), Box<dyn Error>> {
                 Ok(()) => {},
                 Err(e) => eprintln!("{}", e)
             }
-            println!("DNS updated. Sleeping for {repeat_interval} seconds.");
+            println!("{} DNS update cycle complete. Sleeping for {repeat_interval} seconds.", log_prefix());
             // See rust in a month of lunches select! in section 19.33.4
             tokio::select! {
                 _ = sleep(Duration::from_secs(repeat_interval)) => {},

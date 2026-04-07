@@ -1,7 +1,6 @@
 //! Cloudflare DNS API specific related functions
 use reqwest::Response;
 use serde_json::json;
-use chrono::Local;
 use crate::log_util::log_prefix;
 
 pub async fn get_zone_id(api_token: &str, zone_name: &str) -> Result<String, reqwest::Error> {
@@ -83,8 +82,7 @@ async fn dns_records(api_token: &str, zone_id: &str, record_name: &str, record_t
         "https://api.cloudflare.com/client/v4/zones/{}/dns_records?name={}&type={}",
         zone_id, record_name, record_type
     );
-    let the_time = Local::now();
-    println!("{} Url for GET request: {}", the_time.format("%Y-%m-%d %H:%M:%S%:z"), url);
+    println!("{} Url for GET request: {}", log_prefix(), url);
 
     let res = client
         .get(&url)
@@ -114,8 +112,6 @@ async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
         "ttl": 1,
         "proxied": true
     });
-    // let the_time = Local::now();
-    // println!("{} POST URL: {}\nPOST body: {}", the_time.format("%Y-%m-%d %H:%M:%S%:z"), post_url, body);
     println!("{} POST URL: {}\nPOST body: {}", log_prefix(), post_url, body);
 
     let res = client
@@ -149,8 +145,7 @@ async fn update_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
                 "ttl": 1,
                 "proxied": true
             });
-    let the_time = Local::now();
-    println!("{} PATCH URL: {}\nPATCH body: {}", the_time.format("%Y-%m-%d %H:%M:%S%:z"), patch_url, body);
+    println!("{} PATCH URL: {}\nPATCH body: {}", log_prefix(), patch_url, body);
 
     let res = client
         .patch(&patch_url)
