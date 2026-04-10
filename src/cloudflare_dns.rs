@@ -9,7 +9,7 @@ pub async fn get_zone_id(api_token: &str, zone_name: &str) -> Result<String, req
         "https://api.cloudflare.com/client/v4/zones?name={}",
         zone_name
     );
-    println!("Url for GET request: {}", url);
+    println!("{} Url for GET request: {}", log_prefix(), url);
 
     let res = client
         .get(&url)

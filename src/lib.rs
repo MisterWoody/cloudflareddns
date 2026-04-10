@@ -1,9 +1,9 @@
-pub mod cloudflare_dns;
-pub mod config;
-pub mod external_ip;
-pub mod monitor;
-pub mod shutdown;
-pub mod log_util;
+pub(crate) mod cloudflare_dns;
+pub(crate) mod config;
+pub(crate) mod external_ip;
+pub(crate) mod monitor;
+pub(crate) mod shutdown;
+pub(crate) mod log_util;
 
 use std::error::Error;
 use std::time::Duration;
@@ -11,7 +11,7 @@ use tokio::time::sleep;
 use monitor::check_ips_and_update_dns;
 use config::Config;
 use shutdown::shutdown_signal;
-use crate::log_util::log_prefix;
+use log_util::log_prefix;
 
 pub async fn run() -> Result<(), Box<dyn Error>> {
 
