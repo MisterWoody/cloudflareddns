@@ -31,6 +31,7 @@ pub async fn run() -> Result<(), Box<dyn Error>> {
     // Split the hosts and zones strings on the semicolon character into vectors.
     let hosts = hosts.split(';').collect::<Vec<_>>();
     let zones = zones.split(';').collect::<Vec<_>>();
+    let proxied = conf.proxied();
 
     // If the lengths of hosts and zones not equal, return an error.
     if hosts.len() != zones.len() {
@@ -44,7 +45,7 @@ pub async fn run() -> Result<(), Box<dyn Error>> {
     }
 
     if repeat_interval == 0 {
-         match check_ips_and_update_dns(&api_token, &hosts, &zones, ipv4, ipv6).await {
+         match check_ips_and_update_dns(&api_token, &hosts, &zones, ipv4, ipv6, proxied).await {
             Ok(()) => {},
             Err(e) => eprintln!("{}", e)
         }
@@ -52,7 +53,7 @@ pub async fn run() -> Result<(), Box<dyn Error>> {
     else {
         let mut end:bool = false;
         loop {
-            match check_ips_and_update_dns(&api_token, &hosts, &zones, ipv4, ipv6).await {
+            match check_ips_and_update_dns(&api_token, &hosts, &zones, ipv4, ipv6, proxied).await {
                 Ok(()) => {},
                 Err(e) => eprintln!("{}", e)
             }

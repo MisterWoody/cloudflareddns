@@ -62,4 +62,13 @@ impl Config {
         // dbg!(&zones);
         zones
     }
+
+    pub(crate) fn proxied(&mut self) -> bool {
+        let proxied = env::var("CLOUDFLARE_PROXIED").unwrap_or_else(|_| "false".to_owned());
+
+        match proxied.as_str() {
+            "true" => true,
+            _ => false
+        }
+    }
 }

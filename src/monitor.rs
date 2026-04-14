@@ -9,6 +9,7 @@ pub async fn check_ips_and_update_dns(
     zones_vec: &[&str],
     ipv4: bool,
     ipv6: bool,
+    proxied: bool,
 ) -> Result<(), Box<dyn Error>> {
     let external_ipv4 = if ipv4 {
         get_external_ipv4().await?
@@ -39,7 +40,7 @@ pub async fn check_ips_and_update_dns(
         let record_name = format!("{}.{}", host, zone);
         //
         if ipv4 {
-            match create_or_update_record(api_token, &external_ipv4, &record_name, "A", &zone_id).await {
+            match create_or_update_record(api_token, &external_ipv4, &record_name, "A", &zone_id, proxied).await {
                 Ok(_) => {
                     println!(
                     "{} Successfully updated A record for {}, zone {} in CloudFlare to {}",

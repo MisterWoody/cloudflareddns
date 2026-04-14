@@ -36,6 +36,7 @@ pub async fn create_or_update_record(
     record_name: &str,
     record_type: &str,
     zone_id: &str,
+    proxied: bool
 ) -> Result<(), reqwest::Error> {
 
     let res = dns_records(api_token, zone_id, record_name, record_type).await?;
@@ -48,7 +49,7 @@ pub async fn create_or_update_record(
             println!("{} The record is already correct.\n{}", log_prefix(), records[0]);
             Ok(())
         } else if records.is_empty() {
-            let res = create_dns_record(api_token, ip, zone_id, record_name, record_type).await?;
+            let res = create_dns_record(api_token, ip, zone_id, record_name, record_type, proxied).await?;
             
             if res.status().is_success() {
                 println!("{} Created a new record\n{}", log_prefix(), res.text().await?);
@@ -59,7 +60,7 @@ pub async fn create_or_update_record(
             }
         } else {
             let record_id = records[0]["id"].as_str().unwrap();
-            let res = update_dns_record(api_token, ip, zone_id, record_name, record_type, record_id).await?;
+            let res = update_dns_record(api_token, ip, zone_id, record_name, record_type, record_id, proxied).await?;
             if res.status().is_success() {
                 println!("{}", res.text().await?);
                 Ok(())
@@ -99,7 +100,7 @@ async fn dns_records(api_token: &str, zone_id: &str, record_name: &str, record_t
 }
 
 /// Create a new DNS record
-async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name: &str, record_type: &str ) -> Result<Response, reqwest::Error> {
+async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name: &str, record_type: &str, proxied: bool) -> Result<Response, reqwest::Error> {
     let client = reqwest::Client::new();
     let post_url = format!(
         "https://api.cloudflare.com/client/v4/zones/{}/dns_records",
@@ -110,7 +111,7 @@ async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
         "name": record_name,
         "content": ip,
         "ttl": 1,
-        "proxied": true
+        "proxied": proxied
     });
     println!("{} POST URL: {}\nPOST body: {}", log_prefix(), post_url, body);
 
@@ -129,7 +130,7 @@ async fn create_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
 }
 
 /// Update the existing DNS record
-async fn update_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name: &str, record_type: &str, record_id: &str) -> Result<Response, reqwest::Error> {
+async fn update_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name: &str, record_type: &str, record_id: &str, proxied: bool) -> Result<Response, reqwest::Error> {
     let client = reqwest::Client::new();
     let patch_url = format!(
         "https://api.cloudflare.com/client/v4/zones/{}/dns_records/{}",
@@ -143,7 +144,7 @@ async fn update_dns_record(api_token: &str, ip: &str, zone_id: &str, record_name
                 "name": record_name,
                 "content": ip,
                 "ttl": 1,
-                "proxied": true
+                "proxied": proxied
             });
     println!("{} PATCH URL: {}\nPATCH body: {}", log_prefix(), patch_url, body);
 
